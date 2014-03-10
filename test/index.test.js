@@ -36,6 +36,8 @@ describe('Module main test', function () {
 
     var foo = new Foo({ id: 123 });
 
+    console.log(model.types);
+
     foo.id.should.equal(123);
   });
 
