@@ -1,4 +1,4 @@
-## Beyo i18n
+## Beyo Model
 
 A module to define models.
 
