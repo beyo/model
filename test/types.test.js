@@ -3,8 +3,8 @@ var types = require('../lib/types');
 
 describe('Types test', function () {
 
-  it('should expose `ParseException`', function () {
-    var e = new (types.exceptions.ParseException);
+  it('should expose `ValidationException`', function () {
+    var e = new (types.exceptions.ValidationException);
 
     e.should.be.instanceOf(Error);
   });
@@ -15,8 +15,22 @@ describe('Types test', function () {
     e.should.be.instanceOf(Error);
   });
 
+  it('should not allow registering invalid types', function () {
+    [
+      undefined, null, false, true, '', '\n', ' ', '*', '1', -1, 0, 1, {}, [],
+    ].forEach(function (invalidType) {
+      (function () { types.register(invalidType, function () {}); }).should.throw();
+    });
+  });
 
   describe('Testing primitive : `int` / `integer`', function () {
+
+    it('should not override', function () {
+      (function () { types.register('int'); }).should.throw();
+      (function () { types.register('integer'); }).should.throw();
+      (function () { types.register('int', function () {}); }).should.throw();
+      (function () { types.register('integer', function () {}); }).should.throw();
+    });
 
     it('should validate', function () {
       [
@@ -176,6 +190,46 @@ describe('Types test', function () {
         (function () { types.check('object', v); }).should.throw();
       });
     });
+  });
+
+  describe('Testing custom types', function () {
+
+    it('should validate custom validator', function () {
+      (function () { types.check('foo'); }).should.throw();
+
+      types.register('foo', function (v) {
+        if (v === 'foo') {
+          return v;
+        }
+        throw "Test";
+      });
+
+      types.check('foo', 'foo').should.equal('foo');
+      (function () { types.check('foo'); }).should.throw();
+      (function () { types.check('foo', 'bar'); }).should.throw();
+
+      types.unregister('foo').should.be.a.Function;
+      (function () { types.check('foo'); }).should.throw();
+    });
+
+    it('should validate custom Type', function () {
+      var Foo = function Foo() {};
+      var foo = new Foo();
+
+      (function () { types.check('Foo'); }).should.throw();
+
+      types.register(Foo);
+
+      types.check('Foo', foo).should.equal(foo);
+      assert.equal(types.check('Foo', undefined), undefined);
+      assert.equal(types.check('Foo', null), null);
+      (function () { types.check('Foo', 'bar'); }).should.throw();
+
+      types.unregister('Foo').should.be.a.Function;
+      (function () { types.check('Foo'); }).should.throw();
+    });
+
+    it('should not validate');
   });
 
 });

@@ -4,6 +4,10 @@ var model = require('../lib/');
 
 describe('Module main test', function () {
 
+  after(function () {
+    model.types.unregister('Foo');
+  });
+
   it('should expose events', function () {
     model.events.should.be.instanceof(require('events').EventEmitter);
   });
