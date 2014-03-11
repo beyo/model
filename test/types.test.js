@@ -195,21 +195,25 @@ describe('Types test', function () {
   describe('Testing custom types', function () {
 
     it('should validate custom validator', function () {
-      (function () { types.check('foo'); }).should.throw();
+      [
+        'foo', 'Foo1', '_', '$'
+      ].forEach(function (typeName) {
+        (function () { types.check(typeName); }).should.throw();
 
-      types.register('foo', function (v) {
-        if (v === 'foo') {
-          return v;
-        }
-        throw "Test";
+        types.register(typeName, function (v) {
+          if (v === typeName) {
+            return v;
+          }
+          throw "Test";
+        });
+
+        types.check(typeName, typeName).should.equal(typeName);
+        (function () { types.check(typeName); }).should.throw();
+        (function () { types.check(typeName, typeName + '!!!!'); }).should.throw();
+
+        types.unregister(typeName).should.be.a.Function;
+        (function () { types.check(typeName); }).should.throw();
       });
-
-      types.check('foo', 'foo').should.equal('foo');
-      (function () { types.check('foo'); }).should.throw();
-      (function () { types.check('foo', 'bar'); }).should.throw();
-
-      types.unregister('foo').should.be.a.Function;
-      (function () { types.check('foo'); }).should.throw();
     });
 
     it('should validate custom Type', function () {
