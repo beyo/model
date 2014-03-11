@@ -10,6 +10,8 @@ describe('Module main test', function () {
 
   it('should create a named prototype', function () {
     model.define('Foo', {}).should.have.ownProperty('name').and.equal('FooModel');
+
+    model('Foo').should.be.a.Function.and.have.ownProperty('name').and.equal('FooModel');
   });
 
   it('should instanciate with properties', function () {
@@ -35,8 +37,6 @@ describe('Module main test', function () {
     });
 
     var foo = new Foo({ id: 123 });
-
-    console.log(model.types);
 
     foo.id.should.equal(123);
   });
