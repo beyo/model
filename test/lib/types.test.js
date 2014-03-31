@@ -1,5 +1,7 @@
 
-var types = require('../lib/types');
+var types = require('../../lib/types');
+
+var util = require('util');
 
 describe('Types test', function () {
 
@@ -196,7 +198,7 @@ describe('Types test', function () {
 
     it('should validate custom validator', function () {
       [
-        'foo', 'Foo1', '_', '$'
+        'foo', 'FooInvalid', '_', '$'
       ].forEach(function (typeName) {
         (function () { types.check(typeName); }).should.throw();
 
@@ -204,7 +206,7 @@ describe('Types test', function () {
           if (v === typeName) {
             return v;
           }
-          throw "Test";
+          throw "Test failed!";
         });
 
         types.check(typeName, typeName).should.equal(typeName);
@@ -212,7 +214,7 @@ describe('Types test', function () {
         (function () { types.check(typeName, typeName + '!!!!'); }).should.throw();
 
         types.unregister(typeName).should.be.a.Function;
-        (function () { types.check(typeName); }).should.throw();
+        (function () { types.check(typeName, typeName); }).should.throw();
       });
     });
 
@@ -233,7 +235,30 @@ describe('Types test', function () {
       (function () { types.check('Foo'); }).should.throw();
     });
 
-    it('should not validate');
+    it('should validate inheritance', function () {
+      var Foo = function Foo() {};
+      var Bar = function Bar() {};
+      util.inherits(Bar, Foo);
+
+      types.register(Foo);
+
+      types.check(Foo.name, new Bar()).should.be.an.Object;
+    });
+
+    it('should not validate', function () {
+      var Foo = function Foo() {};
+      var Bar = function Bar() {};
+
+      types.register(Foo);
+
+      types.check(Foo.name, new Foo()).should.be.an.Object;
+
+      [
+        1, "", {}, [], true, false, function () {}, new Bar()
+      ].forEach(function (val) {
+        (function () { types.check(Foo.name, val); }).should.throw();
+      });
+    });
   });
 
 });

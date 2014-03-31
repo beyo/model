@@ -1,30 +1,48 @@
 
-var model = require('../lib/');
-
-
 describe('Module main test', function () {
 
-  after(function () {
-    model.types.unregister('Foo');
+  var moduleName = '../';
+  var models;
+
+  var ModelFoo = 'Foo';
+  var ModelFooProto = {
+    properties: {
+      id: 'int',
+      login: 'string'
+    }
+  };
+  var ModelFooTypeName = 'FooModel';
+
+
+  beforeEach(function () {
+    models = require(moduleName);
+  });
+
+  afterEach(function () {
+    var resolvedName = require.resolve(moduleName);
+    delete require.cache[resolvedName];
+
+    models.types.unregister('Foo');
   });
 
   it('should expose events', function () {
-    model.events.should.be.instanceof(require('events').EventEmitter);
+    [
+      'on', 'once',
+      'addListener', 'removeListener', 'removeAllListeners',
+      'listeners'
+    ].forEach(function(method) {
+      models[method].should.be.a.Function;
+    });
   });
 
   it('should create a named prototype', function () {
-    model.define('Foo', {}).should.have.ownProperty('name').and.equal('FooModel');
+    models.define(ModelFoo, ModelFooProto).should.have.ownProperty('name').and.equal(ModelFooTypeName);
 
-    model('Foo').should.be.a.Function.and.have.ownProperty('name').and.equal('FooModel');
+    models.get(ModelFoo).should.be.a.Function.and.have.ownProperty('name').and.equal(ModelFooTypeName);
   });
 
   it('should instanciate with properties', function () {
-    var Foo = model.define('Foo', {
-      properties: {
-        id: 'int',
-        login: 'string'
-      }
-    });
+    var Foo = models.define(ModelFoo, ModelFooProto);
 
     var foo = new Foo();
 
@@ -33,12 +51,7 @@ describe('Module main test', function () {
   });
 
   it('should get the initial value set', function () {
-    var Foo = model.define('Foo', {
-      properties: {
-        id: 'int',
-        login: 'string'
-      }
-    });
+    var Foo = models.define(ModelFoo, ModelFooProto);
 
     var foo = new Foo({ id: 123 });
 
