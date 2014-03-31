@@ -24,6 +24,47 @@ A module to define models.
 
 *TODO*
 
+
+## Collections
+
+Model collections are simply objects wrapping an array with extra methods. It is
+important to note that a `Collection` work directly on the provided array of items!
+So, use `arr.slice(0)` to copy an array to the `Collection` instance if necessary!
+
+### Collection API
+
+* **find** *(cb:Function)*:*{Object}* - return the first model where the callback
+function returns true. The callback receives two arguments; 1) the model item, and
+2) the model index within the `Collection`.
+* **find** *(value:String)*:*{Object}* - return the first model with any attribute
+matching the given value. If the collection is providing a `modelType`, the search
+will be limited to the model type's defined attributes.
+* **find** *(properties:Object)*:*{Object}* - return the first model with all the
+given attributes. Using this search method will ignore the collection's `modelType`
+attributes and search all the provided properties.
+* **findAll** *(cb:Function)*:*{Object}* - same as `find`, but returns a new `Collection`
+with all the matching items.
+* **findAll** *(value:String)*:*{Object}* - same as `find`, but returns a new
+`Collection` with all the matching items.
+* **findAll** *(properties:Object)*:*{Object}* - same as `find`, but returns a new
+`Collection` with all the matching items.
+* **remove** *(cb:Function)*:*{Object}* - remove and return the first model where
+the callback function returns true. The callback receives two arguments; 1) the
+model item, and 2) the model index within the `Collection`.
+* **remove** *(value:String)*:*{Object}* - remove and return the first model with
+any attribute matching the given value. If the collection is providing a `modelType`,
+the search will be limited to the model type's defined attributes.
+* **remove** *(properties:Object)*:*{Object}* - remove and return the first model
+with all the given attributes. Using this search method will ignore the collection's
+`modelType` attributes and search all the provided properties.
+* **removeAll** *(cb:Function)*:*{Object}* - same as `remove`, but returns the
+number of items removed.
+* **removeAll** *(value:String)*:*{Object}* - same as `remove`, but returns the
+number of items removed.
+* **removeAll** *(properties:Object)*:*{Object}* - same as `remove`, but returns the
+number of items removed.
+
+
 ## Contribution
 
 All contributions welcome! Every PR **must** be accompanied by their associated
