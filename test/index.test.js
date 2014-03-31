@@ -46,8 +46,8 @@ describe('Module main test', function () {
 
     var foo = new Foo();
 
-    foo.should.have.ownProperty('id');
-    foo.should.have.ownProperty('login');
+    foo.should.have.property('id');
+    foo.should.have.property('login');
   });
 
   it('should get the initial value set', function () {
