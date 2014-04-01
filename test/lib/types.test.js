@@ -5,18 +5,6 @@ var util = require('util');
 
 describe('Test Types', function () {
 
-  it('should expose `ValidationException`', function () {
-    var e = new (types.exceptions.ValidationException);
-
-    e.should.be.instanceOf(Error);
-  });
-
-  it('should expose `TypeException`', function () {
-    var e = new (types.exceptions.TypeException);
-
-    e.should.be.instanceOf(Error);
-  });
-
   it('should not allow registering invalid types', function () {
     [
       undefined, null, false, true, '', '\n', ' ', '*', '1', -1, 0, 1, {}, [],

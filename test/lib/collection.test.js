@@ -1,5 +1,5 @@
 
-var collections = require('../../lib/collection');
+var Collection = require('../../lib/collection');
 
 describe('Test Collection', function () {
 
@@ -22,18 +22,10 @@ describe('Test Collection', function () {
 
   };
 
-
-  it('should expose exceptions', function () {
-    collections.exceptions.should.be.an.Object;
-    collections.exceptions.CollectionException.should.be.an.Function;
-
-    new collections.exceptions.CollectionException().should.be.an.Error;
-  });
-
   it('should create new instances', function () {
-    var col = collections.Collection();
+    var col = Collection();
 
-    col.should.be.instanceof(collections.Collection);
+    col.should.be.instanceof(Collection);
     col.items.should.be.an.Array;
   });
 
@@ -41,14 +33,14 @@ describe('Test Collection', function () {
     [
       true, 'test', {}, 123
     ].forEach(function (items) {
-      (function () { collections.Collection({ items: items }); }).should.throw();
+      (function () { Collection({ items: items }); }).should.throw();
     });
   });
 
   describe('filter', function () {
 
     it('should find with callback', function () {
-      var col = collections.Collection(items);
+      var col = Collection(items);
 
       col.find(function (item) {
         return item.firstName === 'Rogers';
@@ -60,7 +52,7 @@ describe('Test Collection', function () {
     });
 
     it('should find with object', function () {
-      var col = collections.Collection(items);
+      var col = Collection(items);
 
       col.find({ custom: 'foo' }).should.equal(items[1]);
       col.find({ firstName: 'Rogers' }).should.equal(items[4]);
@@ -68,7 +60,7 @@ describe('Test Collection', function () {
     });
 
     it('should find with value', function () {
-      var col = collections.Collection(items);
+      var col = Collection(items);
 
       col.find(true).should.equal(items[0]);
       col.find('Rogers').should.equal(items[4]);
@@ -76,7 +68,7 @@ describe('Test Collection', function () {
     });
 
     it('should find with value+modelType', function () {
-      var col = collections.Collection({ items: items, modelType: modelType });
+      var col = Collection({ items: items, modelType: modelType });
 
       assert.equal(col.find(true), undefined);
       col.find('Rogers').should.equal(items[4]);
@@ -88,13 +80,13 @@ describe('Test Collection', function () {
   describe('filterAll', function () {
 
     it('should find all with callback', function () {
-      var col = collections.Collection(items);
+      var col = Collection(items);
       var result;
 
       result = col.findAll(function (item) {
         return item.firstName === 'Rogers';
       });
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(1);
       result.items[0].should.equal(items[4]);
 
@@ -102,67 +94,67 @@ describe('Test Collection', function () {
       result = col.findAll(function (item) {
         return item.firstName === 'Rogers' || item.lastName === 'Becker';
       });
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(2);
       result.items.should.eql([ items[2], items[4] ]);
     });
 
     it('should find all with object', function () {
-      var col = collections.Collection(items);
+      var col = Collection(items);
       var result;
 
       result = col.findAll({ custom: 'foo' });
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(2);
       result.items.should.eql([ items[1], items[4] ]);
 
       result = col.findAll({ firstName: 'Rogers' });
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(1);
       result.items.should.eql([ items[4] ]);
 
       result = col.findAll({ firstName: 'Grace', lastName: 'Becker' });
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(1);
       result.items.should.eql([ items[2] ]);
     });
 
     it('should find all with value', function () {
-      var col = collections.Collection({ items: items });
+      var col = Collection({ items: items });
       var result;
 
       result = col.findAll('foo');
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(2);
       result.items.should.eql([ items[1], items[4] ]);
 
 
       result = col.findAll('Rogers');
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(2);
       result.items.should.eql([ items[4], items[5] ]);
 
       result = col.findAll('David');
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(2);
       result.items.should.eql([ items[1], items[6] ]);
     });
 
     it('should find all with value+modelType', function () {
-      var col = collections.Collection({ items: items, modelType: modelType });
+      var col = Collection({ items: items, modelType: modelType });
       var result;
 
       result = col.findAll('foo');
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(0);
 
       result = col.findAll('Rogers');
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(2);
       result.items.should.eql([ items[4], items[5] ]);
 
       result = col.findAll('David');
-      result.should.be.instanceof(collections.Collection);
+      result.should.be.instanceof(Collection);
       result.items.should.be.an.Array.and.have.lengthOf(2);
       result.items.should.eql([ items[1], items[6] ]);
     });
@@ -171,7 +163,7 @@ describe('Test Collection', function () {
   describe('remove', function () {
 
     it('should remove with callback', function () {
-      var col = collections.Collection(items.slice(0));
+      var col = Collection(items.slice(0));
       var result;
 
       result = col.remove(function (item) {
@@ -182,7 +174,7 @@ describe('Test Collection', function () {
     });
 
     it('should remove with object', function () {
-      var col = collections.Collection(items.slice(0));
+      var col = Collection(items.slice(0));
 
       col.remove({ custom: 'foo' }).should.be.equal(items[1]);
       col.remove({ firstName: 'Rogers' }).should.equal(items[4]);
@@ -192,7 +184,7 @@ describe('Test Collection', function () {
     });
 
     it('should remove with value', function () {
-      var col = collections.Collection(items.slice(0));
+      var col = Collection(items.slice(0));
 
       col.remove(true).should.equal(items[0]);
       col.remove('Rogers').should.equal(items[4]);
@@ -202,7 +194,7 @@ describe('Test Collection', function () {
     });
 
     it('should remove with value+modelType', function () {
-      var col = collections.Collection({ items: items.slice(0), modelType: modelType });
+      var col = Collection({ items: items.slice(0), modelType: modelType });
 
       assert.equal(col.remove(true), false);
       col.remove('Rogers').should.equal(items[4]);
@@ -216,7 +208,7 @@ describe('Test Collection', function () {
   describe('removeAll', function () {
 
     it('should remove all with callback', function () {
-      var col = collections.Collection(items.slice(0));
+      var col = Collection(items.slice(0));
       var result;
 
       result = col.removeAll(function (item) {
@@ -233,7 +225,7 @@ describe('Test Collection', function () {
     });
 
     it('should remove all with object', function () {
-      var col = collections.Collection(items.slice(0));
+      var col = Collection(items.slice(0));
       var result;
 
       result = col.removeAll({ custom: 'foo' });
@@ -250,7 +242,7 @@ describe('Test Collection', function () {
     });
 
     it('should remove all with value', function () {
-      var col = collections.Collection({ items: items.slice(0) });
+      var col = Collection({ items: items.slice(0) });
       var result;
 
       result = col.removeAll('foo');
@@ -267,7 +259,7 @@ describe('Test Collection', function () {
     });
 
     it('should remove all with value+modelType', function () {
-      var col = collections.Collection({ items: items.slice(0), modelType: modelType });
+      var col = Collection({ items: items.slice(0), modelType: modelType });
       var result;
 
       result = col.removeAll('foo');
