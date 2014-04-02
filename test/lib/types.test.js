@@ -5,27 +5,27 @@ var util = require('util');
 
 describe('Test Types', function () {
 
-  it('should not allow registering invalid types', function () {
+  it('should not allow defining invalid types', function () {
     [
       undefined, null, false, true, '', '\n', ' ', '*', '1', -1, 0, 1, {}, [],
     ].forEach(function (invalidType) {
-      (function () { types.register(invalidType, function () {}); }).should.throw();
+      (function () { types.define(invalidType, function () {}); }).should.throw();
     });
   });
 
-  it('should fail at unregistering primitives', function () {
+  it('should fail at undefining primitives', function () {
     [
       'int', 'integer', 'string'
     ].forEach(function (type) {
-      (function () { types.unregister(type); }).should.throw('Cannot unregister primitive type `' + type + '`');
+      (function () { types.undefine(type); }).should.throw('Cannot undefine primitive type `' + type + '`');
     });
   });
 
-  it('should fail at unregistering invalid type', function () {
+  it('should fail at undefining invalid type', function () {
     [
       null, undefined, false, true, {}, []
     ].forEach(function (type) {
-      (function () { types.unregister(type); }).should.throw('Type name must be a string `' + String(type) + '`');
+      (function () { types.undefine(type); }).should.throw('Type name must be a string `' + String(type) + '`');
     });
 
   });
@@ -38,24 +38,24 @@ describe('Test Types', function () {
     });
   });
 
-  it('should not fail at unregistering unknown types', function () {
+  it('should not fail at undefining unknown types', function () {
     [
       function INVALID_TYPE() {}, '.', 'TestSomeInvalidType'
     ].forEach(function (type) {
-      assert.equal(types.unregister(type), undefined);
+      assert.equal(types.undefine(type), undefined);
     });
   });
 
   describe('Testing primitive : `int` / `integer`', function () {
 
     it('should not override', function () {
-      types.isRegistered('int').should.be.true;
-      types.isRegistered('integer').should.be.true;
+      types.isDefined('int').should.be.true;
+      types.isDefined('integer').should.be.true;
 
-      (function () { types.register('int'); }).should.throw();
-      (function () { types.register('integer'); }).should.throw();
-      (function () { types.register('int', function () {}); }).should.throw();
-      (function () { types.register('integer', function () {}); }).should.throw();
+      (function () { types.define('int'); }).should.throw();
+      (function () { types.define('integer'); }).should.throw();
+      (function () { types.define('int', function () {}); }).should.throw();
+      (function () { types.define('integer', function () {}); }).should.throw();
     });
 
     it('should validate', function () {
@@ -87,9 +87,9 @@ describe('Test Types', function () {
   describe('Testing primitive : `float` / `number`', function () {
 
     it('should validate', function () {
-      types.isRegistered('float').should.be.true;
-      types.isRegistered('number').should.be.true;
-      types.isRegistered(Number).should.be.true;
+      types.isDefined('float').should.be.true;
+      types.isDefined('number').should.be.true;
+      types.isDefined(Number).should.be.true;
 
       [
         -1, -1.01, 0.1, 1, 2.345, 100, 100.000000001
@@ -122,9 +122,9 @@ describe('Test Types', function () {
   describe('Testing primitive : `string` / `text`', function () {
 
     it('should validate', function () {
-      types.isRegistered('text').should.be.true;
-      types.isRegistered('String').should.be.true;
-      types.isRegistered(String).should.be.true;
+      types.isDefined('text').should.be.true;
+      types.isDefined('String').should.be.true;
+      types.isDefined(String).should.be.true;
 
       [
         "", "foo"
@@ -166,9 +166,9 @@ describe('Test Types', function () {
   describe('Testing primitive : `bool` / `boolean`', function () {
 
     it('should validate', function () {
-      types.isRegistered('bool').should.be.true;
-      types.isRegistered('boolean').should.be.true;
-      types.isRegistered(Boolean).should.be.true;
+      types.isDefined('bool').should.be.true;
+      types.isDefined('boolean').should.be.true;
+      types.isDefined(Boolean).should.be.true;
 
 
       [
@@ -202,8 +202,8 @@ describe('Test Types', function () {
   describe('Testing primitive : `array`', function () {
 
     it('should validate', function () {
-      types.isRegistered('array').should.be.true;
-      types.isRegistered(Array).should.be.true;
+      types.isDefined('array').should.be.true;
+      types.isDefined(Array).should.be.true;
 
       [
         [], [1, 2], [null], [false], [true], new Array(3)
@@ -233,8 +233,8 @@ describe('Test Types', function () {
   describe('Testing primitive : `object`', function () {
 
     it('should validate', function () {
-      types.isRegistered('object').should.be.true;
-      types.isRegistered(Object).should.be.true;
+      types.isDefined('object').should.be.true;
+      types.isDefined(Object).should.be.true;
 
       [
         {}, { foo: 'bar' }, new Object(), Object.create(null)
@@ -271,20 +271,20 @@ describe('Test Types', function () {
 
         (function () { types.check(typeName); }).should.throw();
 
-        Type = types.register(typeName, function (v) {
+        Type = types.define(typeName, function (v) {
           if (v === typeName) {
             return v;
           }
           throw "Test failed!";
         });
 
-        types.isRegistered(typeName).should.be.true;
+        types.isDefined(typeName).should.be.true;
 
         types.check(typeName, typeName).should.equal(typeName);
         (function () { types.check(typeName); }).should.throw();
         (function () { types.check(typeName, typeName + '!!!!'); }).should.throw();
 
-        types.unregister(typeName).should.be.a.Function;
+        types.undefine(typeName).should.be.a.Function;
         (function () { types.check(typeName, typeName); }).should.throw();
       });
     });
@@ -295,10 +295,10 @@ describe('Test Types', function () {
 
       (function () { types.check('FooCustomType'); }).should.throw();
 
-      types.register(FooCustomType);
+      types.define(FooCustomType);
 
-      types.isRegistered('FooCustomType').should.be.true;
-      types.isRegistered(FooCustomType).should.be.true;
+      types.isDefined('FooCustomType').should.be.true;
+      types.isDefined(FooCustomType).should.be.true;
 
       types.check('FooCustomType', foo).should.equal(foo);
       types.check(FooCustomType, foo).should.equal(foo);
@@ -307,9 +307,9 @@ describe('Test Types', function () {
       assert.equal(types.check(FooCustomType, null), null);
       (function () { types.check('FooCustomType', 'bar'); }).should.throw();
 
-      types.getRegisteredNames().indexOf('FooCustomType').should.be.greaterThan(-1);
+      types.getDefinedNames().indexOf('FooCustomType').should.be.greaterThan(-1);
 
-      types.unregister(FooCustomType).should.be.a.Function;
+      types.undefine(FooCustomType).should.be.a.Function;
       (function () { types.check('FooCustomType'); }).should.throw();
     });
 
@@ -318,7 +318,7 @@ describe('Test Types', function () {
       var Bar = function Bar() {};
       util.inherits(Bar, Foo);
 
-      types.register(Foo);
+      types.define(Foo);
 
       types.check(Foo.name, new Bar()).should.be.an.Object;
     });
@@ -327,7 +327,7 @@ describe('Test Types', function () {
       var Foo = function Foo() {};
       var Bar = function Bar() {};
 
-      types.register(Foo);
+      types.define(Foo);
 
       types.check(Foo, new Foo()).should.be.an.Object;
       types.check(Foo.name, new Foo()).should.be.an.Object;

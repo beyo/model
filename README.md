@@ -7,18 +7,36 @@ A module to define models.
 ## Features
 
 * Asynchronous API through generator functions [`co`](https://github.com/visionmedia/co) compatible.
-* Strong type validation support
+* Strong type basic validation support
+* Event driven
 * Extendable through mixin modules
-* Possibility to override just about anything.
-* Frozen objects with validations across all setters
+* Frozen objects
 * Fully tested with a target of 100% coverage.
 * Well structured code.
 
 ## Usage
 
-*TODO*
+```javascript
+// define a new model
+Model.define('Foo', {
+  attributes: {
+    id: { type: 'integer', primary: true },
+    name: { type: 'string', default: '' }
+  }
+});
+
+// fetching/creating a model
+var foo = Model.get('Foo')( 1 );
+// -> FooModel { id: 1, name: '' }
+```
+
 
 ## Models
+
+### Model API
+
+*TODO*
+
 
 ### Model events
 
@@ -65,10 +83,17 @@ number of items removed.
 number of items removed.
 
 
+## Associated Projects
+
+* **Persistence layer** with [model Mappers](https://github.com/beyo/model-mapper)
+* **Validators** with [model validators](https://github.com/beyo/model-validator)
+
+
 ## Contribution
 
 All contributions welcome! Every PR **must** be accompanied by their associated
 unit tests!
+
 
 ## License
 

@@ -1,5 +1,6 @@
 
 var Model = require('../../lib/model');
+var EventEmitter = require('events').EventEmitter;
 
 describe('Test Model', function () {
 
@@ -36,6 +37,8 @@ describe('Test Model', function () {
     var Foo2 = Model.define('Foo2', options);
 
     var foo2 = new Foo2();
+
+    foo2.should.be.instanceof(EventEmitter);
 
     foo2.should.have.property('id');
     foo2.should.have.property('login');
