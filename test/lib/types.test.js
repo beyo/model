@@ -60,10 +60,10 @@ describe('Test Types', function () {
 
     it('should validate', function () {
       [
-        -1, 0, 2, 100
+        -1, 0, 2, 100, '0', '123'
       ].forEach(function (v) {
-        types.check('int', v).should.be.a.Number.and.equal(v);
-        types.check('integer', v).should.be.a.Number.and.equal(v);
+        types.check('int', v).should.be.a.Number.and.equal(parseInt(v));
+        types.check('integer', v).should.be.a.Number.and.equal(parseInt(v));
       });
 
       [
@@ -76,7 +76,7 @@ describe('Test Types', function () {
 
     it('should not validate', function () {
       [
-        false, true, 0.1, 123.01, "", "1", {}, [], function () {}, 1/0, NaN
+        false, true, 0.1, 123.01, '', '123.456', {}, [], function () {}, 1/0, NaN
       ].forEach(function (v) {
         (function () { types.check('int', v); }).should.throw();
         (function () { types.check('integer', v); }).should.throw();
@@ -92,11 +92,11 @@ describe('Test Types', function () {
       types.isDefined(Number).should.be.true;
 
       [
-        -1, -1.01, 0.1, 1, 2.345, 100, 100.000000001
+        -1, -1.01, 0.1, 1, 2.345, 100, 100.000000001, '1', '123.456'
       ].forEach(function (v) {
-        types.check('float', v).should.be.a.Number.and.equal(v);
-        types.check('number', v).should.be.a.Number.and.equal(v);
-        types.check(Number, v).should.be.a.Number.and.equal(v);
+        types.check('float', v).should.be.a.Number.and.equal(parseFloat(v));
+        types.check('number', v).should.be.a.Number.and.equal(parseFloat(v));
+        types.check(Number, v).should.be.a.Number.and.equal(parseFloat(v));
       });
 
       [
@@ -110,7 +110,7 @@ describe('Test Types', function () {
 
     it('should not validate', function () {
       [
-        false, true, "", "1", {}, [], function () {}, NaN
+        false, true, "", {}, [], function () {}, NaN
       ].forEach(function (v) {
         (function () { types.check('float', v); }).should.throw();
         (function () { types.check('number', v); }).should.throw();
