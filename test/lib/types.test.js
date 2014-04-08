@@ -17,7 +17,7 @@ describe('Test Types', function () {
     [
       'int', 'integer', 'string'
     ].forEach(function (type) {
-      (function () { types.undefine(type); }).should.throw('Cannot undefine primitive type `' + type + '`');
+      (function () { types.undefine(type); }).should.throw('Cannot undefine primitive type `{{type}}`');
     });
   });
 
@@ -25,7 +25,7 @@ describe('Test Types', function () {
     [
       null, undefined, false, true, {}, []
     ].forEach(function (type) {
-      (function () { types.undefine(type); }).should.throw('Type name must be a string `' + String(type) + '`');
+      (function () { types.undefine(type); }).should.throw('Type name must be a string `{{type}}`');
     });
 
   });
@@ -34,7 +34,7 @@ describe('Test Types', function () {
     [
       null, undefined, false, true, {}, []
     ].forEach(function (type) {
-      (function () { types.check(type); }).should.throw('Type name must be a string `' + String(type) + '`');
+      (function () { types.check(type); }).should.throw('Type name must be a string `{{type}}`');
     });
   });
 
