@@ -42,6 +42,8 @@ describe('Test Model', function () {
 
     foo2.should.have.property('id');
     foo2.should.have.property('login');
+
+    Model.isModel(foo2).should.be.true;
   });
 
   it('should get the initial value set', function () {

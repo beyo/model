@@ -1,4 +1,4 @@
-## Beyo Model
+# Beyo Model
 
 A module to define models.
 
@@ -13,6 +13,14 @@ A module to define models.
 * Frozen objects
 * Fully tested with a target of 100% coverage.
 * Well structured code.
+
+
+## Install
+
+```
+npm install beyo-model --save
+```
+
 
 ## Usage
 
