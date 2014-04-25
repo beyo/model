@@ -40,9 +40,9 @@ describe('Test Types', function () {
 
   it('should not fail at undefining unknown types', function () {
     [
-      function INVALID_TYPE() {}, '.', 'TestSomeInvalidType'
+      function INVALID_TYPE() {}, 'a.b', 'TestSomeInvalidType'
     ].forEach(function (type) {
-      assert.equal(types.undefine(type), undefined);
+      types.undefine(type).should.be.false;
     });
   });
 
@@ -321,6 +321,8 @@ describe('Test Types', function () {
       types.define(Foo);
 
       types.check(Foo.name, new Bar()).should.be.an.Object;
+
+      types.undefine(Foo); // make sure this is undefined
     });
 
     it('should not validate', function () {
@@ -338,6 +340,15 @@ describe('Test Types', function () {
         (function () { types.check(Foo.name, val); }).should.throw();
       });
     });
+  });
+
+  describe('Test array types', function () {
+
+    it('should validate simple arrays', function () {
+      types.check('int[3][][19]');
+
+    });
+
   });
 
 });

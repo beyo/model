@@ -78,6 +78,28 @@ describe('Test Model', function () {
     (function () { Model.define('Foo4', options); }).should.throw();
   });
 
+  it('should allow custom getter / setter', function () {
+    var options = {
+      attributes: {
+        options: {
+          type: 'string',
+          parse: function (val, data) { return JSON.parse(val); },
+          compile: function (val, data) { return JSON.stringify(val); }
+        }
+      }
+    };
+
+    var TestGetter = Model.define('testGetter', options);
+    var optionsValue = {'a': 1, 'b': 2};
+
+    var m = new TestGetter({ options: optionsValue });
+
+    m._data['options'].should.be.a.String.and.equal(JSON.stringify(optionsValue));
+    m.options.should.not.equal(optionsValue);
+    m.options.should.be.an.Object.and.eql(optionsValue);
+  });
+
+
   it('should handle nested properties');
 
 });
