@@ -288,6 +288,17 @@ describe('Test Types', function () {
         (function () { types.check(typeName, typeName); }).should.throw();
       });
     });
+    it('should fail defining custom validator', function () {
+      var typeName = 'customValidatorTestType';
+      var validator1 = function (v) { return v; };
+      var validator2 = function (v) { return v; };
+      var Type;
+
+      Type = types.define(typeName, validator1);
+      Type = types.define(typeName, validator1);
+
+      +function() { types.define(typeName, validator2); }.should.throw();
+    });
 
     it('should validate custom Type', function () {
       var FooCustomType = function FooCustomType() {};
@@ -347,6 +358,13 @@ describe('Test Types', function () {
     it('should validate simple arrays', function () {
       types.check('int[3][][19]');
 
+      types.check('int[3][][19]', [ [ [ 1, 2, 3 ] ] ]);
+    });
+
+    it('should not validate simple arrays', function () {
+      +function () { types.check('int[3]foo', [ [ 1, 2 ] ]); }.should.throw();
+      +function () { types.check('int[3][][19]', [ [ 1, 2, 3 ] ]); }.should.throw();
+      +function () { types.check('int[3][][19]', [ [ [ "abc", "def" ] ] ]); }.should.throw();
     });
 
   });

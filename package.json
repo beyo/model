@@ -1,6 +1,6 @@
 {
   "name": "beyo-model",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A module to define models.",
   "author": "Yanick Rochon <yanick.rochon@gmail.com>",
   "main": "./index.js",
@@ -25,13 +25,11 @@
     "url": "https://github.com/beyo/model-validation/issues"
   },
   "dependencies": {
-    "error-factory": "latest",
-    "semicov": "^0.1.1",
-    "should": "^3.3.1"
+    "error-factory": "latest"
   },
   "devDependencies": {
-    "should": "~3.2.0",
-    "semicov": "~0.1.1-2",
+    "should": "^3.3.1",
+    "semicov": "^0.1.1",
     "co-mocha": "0.0.2"
   },
   "engines": {

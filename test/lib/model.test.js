@@ -71,11 +71,21 @@ describe('Test Model', function () {
     [
       null, true, false, {}, [], -123, 0, 123, '', '  In-valid'
     ].forEach(function (modelType) {
-      (function () { Model.define(modelType, options); }).should.throw();
+      +function () { Model.define(modelType, options); }.should.throw();
     });
 
     Model.define('Foo4', options);
     (function () { Model.define('Foo4', options); }).should.throw();
+  });
+
+  it('should fail getting models', function () {
+    [
+      null, true, false, {}, [], -123, 0, 123, '', '  In-valid'
+    ].forEach(function (modelType) {
+      +function () { Model.isDefined(modelType); }.should.throw();
+      +function () { Model.get(modelType); }.should.throw();
+    });
+
   });
 
   it('should allow custom getter / setter', function () {
@@ -100,6 +110,43 @@ describe('Test Model', function () {
   });
 
 
-  it('should handle nested properties');
+  it('should handle nested properties', function () {
+    var typeNameA = 'testNestedModelTypeA';
+    var typeNameB = 'testNestedModelTypeB';
+    var typeNameC = 'testNestedModelTypeC';
+    var TypeC = Model.define(typeNameC, {
+      attributes: {
+        foo: {
+          type: 'text',
+          default: 'foo'
+        }
+      }
+    });
+    var TypeB = Model.define(typeNameB, {
+      attributes: {
+        c: {
+          type: typeNameC,
+          get default() { return Model.get(typeNameC)(); }
+        }
+      }
+    });
+    var TypeA = Model.define(typeNameA, {
+      attributes: {
+        b: {
+          type: typeNameB,
+          get default() { return Model.get(typeNameB)(); }
+        }
+      }
+    });
+
+    var model = Model.get(typeNameA)();
+
+    model.toJson().should.eql({ b: { c: { foo: 'foo' } } });
+    model = model.fromJson({ b: { c: { foo: 'bar' } } });
+    model.toJson().should.eql({ b: { c: { foo: 'bar' } } });
+
+  });
+
+
 
 });
