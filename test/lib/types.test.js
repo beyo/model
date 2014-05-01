@@ -359,6 +359,9 @@ describe('Test Types', function () {
       types.check('int[3][][19]');
 
       types.check('int[3][][19]', [ [ [ 1, 2, 3 ] ] ]);
+
+      types.check('string[]', [ 'foo', 'bar' ]);
+
     });
 
     it('should not validate simple arrays', function () {
