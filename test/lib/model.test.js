@@ -147,6 +147,41 @@ describe('Test Model', function () {
 
   });
 
+  it('should preserve previous values', function () {
+    var Type = Model.define('TestPerviousValuesA', {
+      attributes: {
+        id: 'integer',
+        foo: 'text',
+        bar: {
+          type: 'timestamp',
+          get default() { return new Date(); }
+        }
+      }
+    });
+
+    var model = new Type({
+      id: 123,
+      foo: 'Hello'
+    });
+
+    assert.equal(model._previousData, undefined);
+
+    model._isDirty.should.be.false;
+
+    model.foo = 'World!';
+
+    model.foo.should.equal('World!');
+    model._previousData.should.eql({ foo: 'Hello' });
+
+    model._isDirty.should.be.true;
+
+    model._isDirty = false;
+
+    assert.equal(model._previousData, undefined);
+
+    model._isDirty.should.be.false;
+
+  });
 
 
 });
