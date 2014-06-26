@@ -93,8 +93,8 @@ describe('Test Model', function () {
       attributes: {
         options: {
           type: 'string',
-          parse: function (val, data) { return JSON.parse(val); },
-          compile: function (val, data) { return JSON.stringify(val); }
+          parser: function (val, data) { return JSON.parse(val); },
+          compiler: function (val, data) { return JSON.stringify(val); }
         }
       }
     };
