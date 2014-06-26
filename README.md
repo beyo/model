@@ -2,7 +2,11 @@
 
 A module to define models.
 
-*More description in next commits.*
+This module is not about database and does not provide a persistence layer. It does, however,
+provide globally available typed models, extendable through various modules. For persistence,
+see [model mappers](https://github.com/beyo/model-mapper). For validations, see 
+[model validation](https://github.com/beyo/model-validation).
+
 
 ## Features
 
