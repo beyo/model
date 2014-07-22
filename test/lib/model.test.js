@@ -184,4 +184,47 @@ describe('Test Model', function () {
   });
 
 
+  describe('instance methods', function () {
+
+    it('should define model methods', function () {
+      var Type = Model.define('TestDefineMethods', {
+        methods: {
+          foo: function () {
+            return 'bar';
+          }
+        }
+      });
+
+      var type = Type();
+
+      type.foo().should.equal('bar');
+
+      assert.equal(undefined, Type.foo);
+    });
+
+  });
+
+
+  describe('static methods', function () {
+
+    it('should define static methods', function () {
+      var Type = Model.define('TestDefineStaticMethods', {
+        staticMethods: {
+          foo: function () {
+            return 'bar';
+          }
+        }
+      });
+
+      var type = Type();
+
+      assert.equal(undefined, type.foo);
+
+      Type.foo().should.equal('bar');
+
+    });
+
+  });
+
+
 });

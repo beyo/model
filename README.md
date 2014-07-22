@@ -15,7 +15,6 @@ see [model mappers](https://github.com/beyo/model-mapper). For validations, see
 * Event driven
 * Extendable through mixin modules
 * Frozen objects
-* Fully tested with a target of 100% coverage.
 * Well structured code.
 
 
