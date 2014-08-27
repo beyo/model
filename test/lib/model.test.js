@@ -271,7 +271,7 @@ describe('Test Model', function () {
 
       var model = Type();
 
-      model.toJson().should.eql({ id: '123', 'first_name': 'John', 'last_name': 'Smith' });
+      model.toJson().should.eql({ id: '123', firstName: 'John', lastName: 'Smith' });
     });
 
   });
@@ -303,7 +303,7 @@ describe('Test Model', function () {
       model.inline.should.eql(['a','b','c']);
       model.objectList.should.eql([{},{},{}]);
 
-      model.toJson().should.eql({values:[1, 2, 3], inline:['a','b','c'], object_list:[{},{},{}]});
+      model.toJson().should.eql({values:[1, 2, 3], inline:['a','b','c'], objectList:[{},{},{}]});
     });
 
   });
