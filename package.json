@@ -1,6 +1,6 @@
 {
   "name": "beyo-model",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A module to define models.",
   "author": "Yanick Rochon <yanick.rochon@gmail.com>",
   "main": "./index.js",

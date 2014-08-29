@@ -308,5 +308,39 @@ describe('Test Model', function () {
 
   });
 
+  describe('Testing new models', function () {
+
+    it('should flag as new', function () {
+      var Type = Model.define('TestNewSimple', {
+        attributes: {
+          id: {
+            type: 'integer',
+            primary: true
+          },
+          text: {
+            type: 'text'
+          }
+        }
+      });
+      var model;
+
+      model = new Type();
+      model._isNew.should.be.true;
+      model.text = 'Hello';
+      model._isNew.should.be.true;
+      model.id = 123;
+      model._isNew.should.be.false;
+
+      model = new Type([ 123 ]);
+      model._isNew.should.be.false;
+      model.text = 'Hello';
+      model._isNew.should.be.false;
+      model.id = null;
+      model._isNew.should.be.true;
+
+    });
+
+  });
+
 
 });
