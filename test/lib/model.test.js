@@ -304,6 +304,12 @@ describe('Test Model', function () {
       model.objectList.should.eql([{},{},{}]);
 
       model.toJson().should.eql({values:[1, 2, 3], inline:['a','b','c'], objectList:[{},{},{}]});
+
+      // replacing array...
+      model.values = [ 100, 200, 300 ];
+
+      model._previousData.values.should.eql([1, 2, 3]);
+      model.values.should.eql([100, 200, 300]);
     });
 
   });
