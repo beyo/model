@@ -4,16 +4,6 @@ var EventEmitter = require('events').EventEmitter;
 
 describe('Test Model', function () {
 
-  it('should expose events', function () {
-    [
-      'on', 'once',
-      'addListener', 'removeListener', 'removeAllListeners',
-      'listeners'
-    ].forEach(function(method) {
-      Model[method].should.be.a.Function;
-    });
-  });
-
   it('should create a named prototype', function () {
     var options = {
       attributes: {
@@ -25,7 +15,31 @@ describe('Test Model', function () {
     Model.define('Foo1', options).should.have.ownProperty('name').and.equal('Foo1Model');
 
     Model.get('Foo1').should.be.a.Function.and.have.ownProperty('name').and.equal('Foo1Model');
+
   });
+
+
+  it('should have readonly properties', function () {
+    var Type = Model.define('TestReadonlyBuiltinProperties', {
+      attributes: {
+        id: 'text'
+      }
+    });
+
+    var model = Type({ id: 'abc' });
+    var _id = model._id;
+    var _newId = _id + Date.now();
+
+    assert.notEqual(_id, undefined);
+    assert.notEqual(_id, _newId);
+
+    model.id.should.equal('abc');
+
+    !function () { "use strict"; model._id = _newId; }.should.throw();
+    !function () { "use strict"; model._isNew = !model._isNew; }.should.throw();
+
+  });
+
 
   it('should instanciate with properties', function () {
     var options = {
@@ -153,39 +167,137 @@ describe('Test Model', function () {
 
   });
 
-  it('should preserve previous values', function () {
-    var Type = Model.define('TestPerviousValuesA', {
-      attributes: {
-        id: 'integer',
-        foo: 'text',
-        bar: {
-          type: 'timestamp',
-          get default() { return new Date(); }
+
+  describe('Testing events', function () {
+
+    it('should expose events', function () {
+      [
+        'on', 'once',
+        'addListener', 'removeListener', 'removeAllListeners',
+        'listeners'
+      ].forEach(function(method) {
+        Model[method].should.be.a.Function;
+      });
+    });
+
+    it('should emit define event', function () {
+      var modelNamespace = 'test.events';
+      var modelTypeName = 'TestingEventDefineModel';
+      var modelOptions = { something: 'test', attributes: { foo: 'bar' } };
+      var eventEmitted = false;
+
+      Model.once('define', function (evt) {
+
+        evt.modelType.should.equal(modelNamespace + '.' + modelTypeName);
+        evt.namespace.should.equal(modelNamespace);
+        evt.typeName.should.equal(modelTypeName),
+        evt.attributes.should.have.ownProperty('foo');
+        evt.constructor.should.be.a.Function;
+        evt.options.should.equal(modelOptions);
+
+        eventEmitted = true;
+      });
+
+      Model.define(modelNamespace + '.' + modelTypeName, modelOptions);
+
+      eventEmitted.should.be.true;
+    });
+
+  });
+
+
+  describe('Testing previous state', function () {
+
+    it('should preserve previous values', function () {
+      var Type = Model.define('TestPerviousValuesA', {
+        attributes: {
+          id: 'integer',
+          foo: 'text',
+          bar: {
+            type: 'timestamp',
+            get default() { return new Date(); }
+          }
         }
-      }
+      });
+
+      var model = Type({
+        id: 123,
+        foo: 'Hello'
+      });
+
+      assert.equal(model._previousData, undefined);
+
+      model._isDirty.should.be.false;
+
+      model.foo = 'World!';
+
+      model.foo.should.equal('World!');
+      model._previousData.should.eql({ foo: 'Hello' });
+
+      model._isDirty.should.be.true;
+
+      model._isDirty = false;
+
+      assert.equal(model._previousData, undefined);
+
+      model._isDirty.should.be.false;
+
     });
 
-    var model = Type({
-      id: 123,
-      foo: 'Hello'
+    it('should preserve previous hierarchy', function () {
+      var User = Model.define('TestPreserveUser', {
+        attributes: {
+          roles: 'TestPreserveRole[]'
+        }
+      });
+      var Role = Model.define('TestPreserveRole', {
+        attributes: {
+          name: 'text',
+          permissions: 'TestPreservePermission[]'
+        }
+      });
+      var Permission = Model.define('TestPreservePermission', {
+        attributes: {
+          name: 'text'
+        }
+      });
+
+      var user = User({
+        roles: [
+          Role({
+            name: 'A',
+            permissions: [
+              Permission({ name: 'a' }),
+              Permission({ name: 'b' })
+            ]
+          }),
+          Role({
+            name: 'B',
+            permissions: [
+              Permission({ name: 'c' })
+            ]
+          })
+        ]
+      });
+      var expectedJson = {roles: [ {name:'A', permissions: [ {name:'a'}, {name:'b'} ] }, {name:'B', permissions: [ {name:'c'} ]} ]};
+
+      user.toJson().should.eql(expectedJson);
+
+      user.roles = user.roles.slice(0, 1).map(function (role, roleIndex) {
+        user.roles[roleIndex].name = user.roles[roleIndex].name + '+';
+
+        user.roles[roleIndex].permissions = [ Permission({ name: 'x' }) ];
+
+        return user.roles[roleIndex];
+      });
+
+      //console.log(JSON.stringify(user._previousData, null, 2));
+
+      user.toJson().should.not.eql(expectedJson);
+      user.toJson().should.eql({roles: [ {name:'A+', permissions: [ {name:'x'} ] } ]});
+      user._previousData.should.eql(expectedJson);
+
     });
-
-    assert.equal(model._previousData, undefined);
-
-    model._isDirty.should.be.false;
-
-    model.foo = 'World!';
-
-    model.foo.should.equal('World!');
-    model._previousData.should.eql({ foo: 'Hello' });
-
-    model._isDirty.should.be.true;
-
-    model._isDirty = false;
-
-    assert.equal(model._previousData, undefined);
-
-    model._isDirty.should.be.false;
 
   });
 
@@ -348,5 +460,36 @@ describe('Test Model', function () {
 
   });
 
+
+  describe('Testing with no defined attributes', function () {
+
+    it('should define empty model', function () {
+      var Type = Model.define('TestNoAttributesSimpleModel');
+
+      var model = Type();
+
+      model.toJson().should.eql({});
+
+    });
+
+    it('should merge from a JSON object', function () {
+      var Type = Model.define('TestNoAttributesFromJSON');
+
+      var original = { a: 'Hello', b: { c: 123 }, d: [1,2,3] };
+      var delta = { b: { e: 456 }, d: 'World!' };
+
+      var model = Type(original);
+
+      model.toJson().should.eql(original);
+
+      model.fromJson(delta).toJson().should.eql({
+        a: 'Hello',
+        b: { e: 456 },
+        d: 'World!'
+      });
+
+    })
+
+  });
 
 });
