@@ -1,8 +1,8 @@
 
-var Model = require('../../lib/model');
-var EventEmitter = require('events').EventEmitter;
-
 describe('Test Model', function () {
+
+  var Model = require('../../lib/model');
+
 
   it('should create a named prototype', function () {
     var options = {
@@ -42,6 +42,8 @@ describe('Test Model', function () {
 
 
   it('should instanciate with properties', function () {
+    var EventEmitter = require('events').EventEmitter;
+
     var options = {
       attributes: {
         id: 'int',
