@@ -301,6 +301,44 @@ describe('Test Model', function () {
 
     });
 
+
+    it('should recreate Model from previous state', function () {
+      var Master = Model.define('TestModelPreviousStateMaster', {
+        attributes: {
+          foo: 'TestModelPreviousStateFoo'
+        }
+      });
+
+      var Foo = Model.define('TestModelPreviousStateFoo', {
+        attributes: {
+          msg: { type: 'string', primary: true }
+        }
+      });
+
+      var model = Master({
+        foo: Foo(['Hello world!'])
+      });
+      var oldFoo;
+
+      model.foo.msg.should.equal('Hello world!');
+
+      assert.equal(model._previousData, undefined);
+
+      model.foo = Foo(['Another message']);
+
+      model.foo.msg.should.equal('Another message');
+      model._previousData.foo.msg.should.equal('Hello world!');
+
+      model._previousData.foo.should.have.property('__model__');
+
+      oldFoo = model._previousData.foo;
+      Model.isModel(oldFoo).should.be.false;
+
+      oldFoo = model._previousData.foo.__model__(oldFoo);
+      Model.isModel(oldFoo).should.be.true;
+
+    });
+
   });
 
 
