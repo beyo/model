@@ -7,12 +7,10 @@ This module is not about database and does not provide a persistence layer. It d
 
 ## Features
 
-* Asynchronous API
 * Strong type basic validation support
+* Array support
 * Event driven
 * Extendable through mixin modules
-* Frozen objects
-* Well structured code.
 
 
 ## Install
@@ -25,16 +23,18 @@ This module is not about database and does not provide a persistence layer. It d
 ```javascript
 const Model = require('beyo-model');
 
-class FooModel extends Model {
-    // Methods here (i.e. getters, setters, etc.)
-}
-FooModel.attributes = {
+const fooModelAttributes = {
     // attributes definition here
 };
 
-Model.define(FooModel);
+class FooModel extends Model {
+    // Methods here (i.e. getters, setters, etc.)
+}
+
+
+Model.define(FooModel, fooModelAttributes);
 // or
-Model.define('FooModel', FooModel);
+Model.define('FooModel', FooModel, fooModelAttributes);
 ```
 
 ```javascript
