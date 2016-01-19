@@ -69,6 +69,45 @@ describe('Testing Model', function () {
   });
 
 
+  describe('Undefining models', function () {
+
+    it('should undefine models', function () {
+
+      class TestModel_A extends Model {}
+
+      Model.isDefined(TestModel_A).should.be.false();
+      Model.isDefined(TestModel_A.name).should.be.false();
+      Model.define(TestModel_A);
+      Model.isDefined(TestModel_A).should.be.true();
+      Model.isDefined(TestModel_A.name).should.be.true();
+      Model.undefine(TestModel_A.name).should.equal(TestModel_A);
+      Model.isDefined(TestModel_A).should.be.false();
+      Model.isDefined(TestModel_A.name).should.be.false();
+      Model.define(TestModel_A);
+      Model.undefine(TestModel_A).should.equal(TestModel_A);
+      Model.isDefined(TestModel_A).should.be.false();
+      Model.isDefined(TestModel_A.name).should.be.false();
+
+    });
+
+    it('should fail if invalid model name', function () {
+      [
+        undefined, null, false, true,
+        NaN, 0, 1, Infinity, '',
+        function () {}, {}, [], /./, new Date()
+      ].forEach(function (name) {
+        (function () { Model.undefine(name); }).should.throw(/Type name must be a string|Invalid type/);
+      });
+    });
+
+    it('should fail on missing model', function () {
+      Model.isDefined('TestModel_A').should.be.false();
+      (function () { Model.undefine('TestModel_A'); }).should.throw('Unknown model name');
+    });
+
+  });
+
+
   describe('Getting models', function () {
 
     it('should get defined models', function () {
@@ -98,7 +137,7 @@ describe('Testing Model', function () {
         NaN, 0, 1, '',
         function () {}, {}, [], /./, new Date()
       ].forEach(function (name) {
-        (function () { Model.get(name); }).should.throw('Invalid model name');
+        (function () { Model.get(name); }).should.throw(/Type name must be a string|Invalid type/);
       });
     });
 
@@ -108,6 +147,33 @@ describe('Testing Model', function () {
       ].forEach(function (name) {
         (function () { Model.get(name); }).should.throw('Unknown model name');
       });
+    });
+
+  });
+
+
+  describe('Primary attributes', function () {
+
+    it('should return defined primary attributes', function () {
+
+      class TestPrimary extends Model {}
+
+      Model.define(TestPrimary, {
+        foo: { primary: true },
+        bar: { primary: false },
+        buz: { primary: true },
+        meh: {}
+      });
+
+      Model.getPrimaryAttributes(TestPrimary).should.deepEqual(['foo', 'buz']);
+      Model.getPrimaryAttributes('TestPrimary').should.deepEqual(['foo', 'buz']);
+    });
+
+    it('should fail on unknown model', function () {
+
+      Model.isDefined('UnknownPrimaryModel').should.be.false();
+
+      (function () { Model.getPrimaryAttributes('UnknownPrimaryModel'); }).should.throw('Unknown model name');
     });
 
   });
