@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "error-factory": "^0.1.6",
-    "promise-events": "^0.1.2",
     "var-validator": "0.0.3"
   },
   "devDependencies": {

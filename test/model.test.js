@@ -5,7 +5,6 @@ describe('Testing Model', function () {
 
   const Model = require('../lib/model');
 
-
   describe('Defining models', function () {
 
     it('should not create instance if not defined', function () {
@@ -174,6 +173,71 @@ describe('Testing Model', function () {
       Model.isDefined('UnknownPrimaryModel').should.be.false();
 
       (function () { Model.getPrimaryAttributes('UnknownPrimaryModel'); }).should.throw('Unknown model name');
+    });
+
+  });
+
+
+  describe('JSON', function () {
+
+    class JsonModel1 extends Model {}
+    class JsonModel2 extends Model {}
+
+    before(function () {
+      const JsonModel1Attributes = {
+        optional: 'JsonModel2',
+        mandatory: {
+          type: 'JsonModel2',
+          get default() { return new JsonModel2(); }
+        },
+        special: {
+          type: 'text',
+          alias: 'bob'
+        }
+      };
+      const JsonModel2Attributes = {
+        foo: {
+          type: 'text',
+          default: 'Hello'
+        }
+      };
+
+      Model.define(JsonModel1, JsonModel1Attributes);
+      Model.define(JsonModel2, JsonModel2Attributes);
+    });
+
+
+    it('should import from JSON', function () {
+      let model = new JsonModel1({
+        optional: { foo: 'World' }
+      });
+
+      model.optional.foo.should.equal('World');
+
+      model.toJson().should.deepEqual({ optional: { foo: 'World' }, mandatory: { foo: 'Hello' }});
+    });
+
+    it('should import with alias', function () {
+      let model = new JsonModel1({
+        bob: 'Is special'
+      });
+
+      model.toJson().should.deepEqual({ mandatory: { foo: 'Hello' }, special: 'Is special' });
+    });
+
+    it('should export to JSON', function () {
+      let model = new JsonModel1();
+
+      model.toJson().should.deepEqual({ mandatory: { foo: 'Hello' }});
+    });
+
+  });
+
+
+  describe('Events', function () {
+
+    it('should emit update events', function () {
+
     });
 
   });
