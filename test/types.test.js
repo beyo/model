@@ -3,7 +3,62 @@
 
 describe('Testing Types', function () {
 
-  const Model = require('../lib/types');
+  const Type = require('../lib/types');
+
+
+  describe('Parsing', function () {
+
+    it('should parse simple type', function () {
+      [
+        'foo',
+        'FOO',
+        'Foo',
+        function foo() {},
+        function FOO() {},
+        function Foo() {}
+      ].forEach(function (t) {
+        Type.parseType(t).should.deepEqual({ name: 'foo', isArray: false });
+      });
+    });
+
+    it('should parse namespace type', function () {
+      [
+        'foo.bar.buz',
+        'FOO.BAR.BUZ',
+        'Foo.Bar.Buz',
+        function foo_bar_buz() {},
+        function FOO_BAR_BUZ() {},
+        function Foo_Bar_Buz() {}
+      ].forEach(function (t) {
+        Type.parseType(t).should.deepEqual({ name: 'foo.bar.buz', isArray: false });
+      });
+    });
+
+    it('should fail if not a string or function', function () {
+      [
+        undefined, null,
+        Infinity, NaN, -1, 0, 1, false, true,
+        {}, Object.create(null),
+        [], new Array(), /./, new Date()
+      ].forEach(function (type) {
+        (function () { Type.parseType(type); }).should.throw(/Type name must be a string/);
+      });
+    });
+
+    it('should fail on invalid name', function () {
+      [
+        '',
+        '\n', 'foo\nbar',
+        '-', 'foo-bar',
+        '0', '1', '0foo', '1foo'
+      ].forEach(function (type) {
+        console.log(type);
+        (function () { Type.parseType(type); }).should.throw(/Invalid type/);
+      });
+    });
+
+  });
+
 
 
   describe('Validate types', function () {

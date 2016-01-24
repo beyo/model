@@ -36,7 +36,7 @@
     "should": "^8.1.1"
   },
   "engines": {
-    "node": ">= 4.4"
+    "node": ">= 4.2"
   },
   "license": "MIT"
 }
