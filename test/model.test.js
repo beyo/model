@@ -16,38 +16,38 @@ describe('Testing Model', function () {
 
     it('should be instanceof Model', function () {
 
-      class TestModel_0 extends Model {}
+      class TestModel0 extends Model {}
 
-      Model.define(TestModel_0);
+      Model.define(TestModel0);
 
-      let t = new TestModel_0();
+      let t = new TestModel0();
 
-      t.should.instanceOf(TestModel_0);
+      t.should.instanceOf(TestModel0);
       t.should.instanceOf(Model);
     });
 
     it('should allow models with no defined attributes', function () {
 
-      class TestModel_1 extends Model {}
+      class TestModel1 extends Model {}
 
-      Model.define(TestModel_1);
+      Model.define(TestModel1);
 
-      let t = new TestModel_1();
+      let t = new TestModel1();
 
       t.toJson().should.deepEqual({});
     });
 
     it('should create from attributes', function () {
 
-      class TestModel_2 extends Model {}
+      class TestModel2 extends Model {}
 
-      Model.define(TestModel_2, {
+      Model.define(TestModel2, {
         foo: {
           default: 'Foo'
         }
       });
 
-      let t = new TestModel_2();
+      let t = new TestModel2();
 
       t.foo.should.equal('Foo');
       t.toJson().should.deepEqual({ foo: 'Foo' });
@@ -72,20 +72,20 @@ describe('Testing Model', function () {
 
     it('should undefine models', function () {
 
-      class TestModel_A extends Model {}
+      class TestModelA extends Model {}
 
-      Model.isDefined(TestModel_A).should.be.false();
-      Model.isDefined(TestModel_A.name).should.be.false();
-      Model.define(TestModel_A);
-      Model.isDefined(TestModel_A).should.be.true();
-      Model.isDefined(TestModel_A.name).should.be.true();
-      Model.undefine(TestModel_A.name).should.equal(TestModel_A);
-      Model.isDefined(TestModel_A).should.be.false();
-      Model.isDefined(TestModel_A.name).should.be.false();
-      Model.define(TestModel_A);
-      Model.undefine(TestModel_A).should.equal(TestModel_A);
-      Model.isDefined(TestModel_A).should.be.false();
-      Model.isDefined(TestModel_A.name).should.be.false();
+      Model.isDefined(TestModelA).should.be.false();
+      Model.isDefined(TestModelA.name).should.be.false();
+      Model.define(TestModelA);
+      Model.isDefined(TestModelA).should.be.true();
+      Model.isDefined(TestModelA.name).should.be.true();
+      Model.undefine(TestModelA.name).should.equal(TestModelA);
+      Model.isDefined(TestModelA).should.be.false();
+      Model.isDefined(TestModelA.name).should.be.false();
+      Model.define(TestModelA);
+      Model.undefine(TestModelA).should.equal(TestModelA);
+      Model.isDefined(TestModelA).should.be.false();
+      Model.isDefined(TestModelA.name).should.be.false();
 
     });
 
@@ -100,8 +100,8 @@ describe('Testing Model', function () {
     });
 
     it('should fail on missing model', function () {
-      Model.isDefined('TestModel_A').should.be.false();
-      (function () { Model.undefine('TestModel_A'); }).should.throw('Unknown model name');
+      Model.isDefined('TestModelA').should.be.false();
+      (function () { Model.undefine('TestModelA'); }).should.throw('Unknown model name');
     });
 
   });
@@ -111,23 +111,23 @@ describe('Testing Model', function () {
 
     it('should get defined models', function () {
 
-      class TestModel_3 extends Model {}
+      class TestModel3 extends Model {}
 
-      Model.isDefined(TestModel_3.name).should.be.false();
-      Model.define(TestModel_3);
+      Model.isDefined(TestModel3.name).should.be.false();
+      Model.define(TestModel3);
 
-      Model.isDefined(TestModel_3.name).should.be.true();
-      Model.get(TestModel_3.name).should.equal(TestModel_3);
+      Model.isDefined(TestModel3.name).should.be.true();
+      Model.get(TestModel3.name).should.equal(TestModel3);
     });
 
     it('should get named defined models', function () {
       const modelName = 'NamedModel_4';
 
-      class TestModel_4 extends Model {}
+      class TestModel4 extends Model {}
 
-      Model.define(modelName, TestModel_4);
+      Model.define(modelName, TestModel4);
 
-      Model.get(modelName).should.equal(TestModel_4);
+      Model.get(modelName).should.equal(TestModel4);
     });
 
     it('should fail with invalid model name', function () {

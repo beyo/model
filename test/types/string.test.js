@@ -25,7 +25,6 @@ describe('Test Type String', function () {
       function () {}, /./, new Date(),
       [], new Array()
     ].forEach(function (value) {
-      console.log(value);
       (function () { validator(value); }).should.throw(/Invalid string/);
     });
   });

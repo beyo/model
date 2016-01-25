@@ -9,7 +9,6 @@ This module is not about database and does not provide a persistence layer. It d
 
 * Strong type basic validation support
 * Array support
-* Event driven
 * Extendable through mixin modules
 
 
