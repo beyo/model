@@ -234,13 +234,43 @@ describe('Testing Model', function () {
   });
 
 
-  describe('Events', function () {
+  describe('Plugins', function () {
 
-    it('should emit update events', function () {
+    it('should define plugin', function () {
+      class PluginModel extends Model {}
+      const attributes = {
+        foo: 'text'
+      };
 
+      function plugin(t, a) {
+        t.should.equal(PluginModel);
+        a.should.equal(attributes);
+
+        t.prototype.should.not.have.ownProperty('plugin');
+        t.prototype.plugin = 'Hello World';
+        t.prototype.should.have.ownProperty('plugin');
+      }
+
+      Model.use(plugin);
+      Model.use(plugin); // register twice should ignore
+
+      Model.define(PluginModel, attributes);
+
+      let foo = new PluginModel();
+
+      foo.should.have.property('plugin').equal('Hello World');
+    });
+
+    it('should fail if not a function', function () {
+      [
+        undefined, null, false, true,
+        -1, 0, 1, NaN, Infinity,
+        {}, Object.create(null), [], new Date(), /./
+      ].forEach(function (plugin) {
+        (function () { Model.use(plugin); }).should.throw(/Plugin is not a function/);
+      });
     });
 
   });
-
 
 });
