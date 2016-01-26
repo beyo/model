@@ -9,7 +9,7 @@ This module is not about database and does not provide a persistence layer. It d
 
 * Strong type basic validation support
 * Array support
-* Extendable through mixin modules
+* Extendable through model plugins
 
 
 ## Install
@@ -49,12 +49,48 @@ let foo = new FooModel();
 
 ### Model API
 
-*TODO*
+* *static* **Model.use(*plugin*)**
+* *static* **Model.define(*[name,] type[, attributes]*)**
+* *static* **Model.get(*name*)**
+* *static* **Model.isDefined(*type|name*)**
+* *static* **Model.undefine(*type|name*)**
+* *static* **Model.getPrimaryAttributes(*type|name*)**
+* **Model.prototype.toJSON()**
+
+### Types API
+
+* *static* **Types.define(*[name,] type[, validator]*)**
+* *static* **Types.undefine(*type|name*)**
+* *static* **Types.getDefinedNames()**
+* *static* **Types.isDefined(*type|name*)**
+* *static* **Types.validate(*type|name, value*)**
+* *static* **Types.isValidType(*type|name*)**
+* *static* **Types.parseType(*type*)**
 
 
-### Model events
+## Plugins
 
-*TODO*
+Model behaviours may be extended through plugins. A plugin is a function executed after a Model prototype has been processed, and before it has been registered. The function receives the Model type, and the specified attributes definitions (any returned value from a plugin function will be ignored).
+
+For example :
+
+```javascript
+Model.use(function fooPlugin(type, attributes) {
+  type.prototype.foo = function () { return 'Hello World!'; };
+});
+
+const Foo = Model.define(function Foo() {});
+
+const foo = new Foo();
+
+console.log(foo.foo());
+// -> "Hello World!"
+```
+
+### Official plugins
+
+* **beyo-model-validator** *(soon)*
+* **beyo-model-mapper** *(soon)*
 
 
 ## Contribution

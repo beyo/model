@@ -81,7 +81,7 @@ describe('Testing Types', function () {
     ];
     const invalidTypes = [
       '', 'foo\nbar',
-      function () {}
+      {}
     ];
 
     it('should check valid types', function () {
@@ -184,9 +184,13 @@ describe('Testing Types', function () {
     });
 
     it('should fail to override defined type', function () {
+      function testTypeOverride() {}
+
       Type.isDefined('testTypeOverride').should.be.false();
-      Type.define(function testTypeOverride() {});
+      Type.isDefined(testTypeOverride).should.be.false();
+      Type.define(testTypeOverride);
       Type.isDefined('testTypeOverride').should.be.true();
+      Type.isDefined(testTypeOverride).should.be.true();
 
       (function () { Type.define('testTypeOverride', function () {}); }).should.throw(/Cannot override defined type/);
       (function () { Type.define('testTypeOverride', function () {}, function () {}); }).should.throw(/Cannot override defined type/);

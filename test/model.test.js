@@ -34,7 +34,7 @@ describe('Testing Model', function () {
 
       let t = new TestModel1();
 
-      t.toJson().should.deepEqual({});
+      t.toJSON().should.deepEqual({});
     });
 
     it('should create from attributes', function () {
@@ -50,7 +50,7 @@ describe('Testing Model', function () {
       let t = new TestModel2();
 
       t.foo.should.equal('Foo');
-      t.toJson().should.deepEqual({ foo: 'Foo' });
+      t.toJSON().should.deepEqual({ foo: 'Foo' });
     });
 
     it('should fail with wrong model', function () {
@@ -214,7 +214,7 @@ describe('Testing Model', function () {
 
       model.optional.foo.should.equal('World');
 
-      model.toJson().should.deepEqual({ optional: { foo: 'World' }, mandatory: { foo: 'Hello' }});
+      model.toJSON().should.deepEqual({ optional: { foo: 'World' }, mandatory: { foo: 'Hello' }});
     });
 
     it('should import with alias', function () {
@@ -222,13 +222,13 @@ describe('Testing Model', function () {
         bob: 'Is special'
       });
 
-      model.toJson().should.deepEqual({ mandatory: { foo: 'Hello' }, special: 'Is special' });
+      model.toJSON().should.deepEqual({ mandatory: { foo: 'Hello' }, special: 'Is special' });
     });
 
     it('should export to JSON', function () {
       let model = new JsonModel1();
 
-      model.toJson().should.deepEqual({ mandatory: { foo: 'Hello' }});
+      model.toJSON().should.deepEqual({ mandatory: { foo: 'Hello' }});
     });
 
   });
