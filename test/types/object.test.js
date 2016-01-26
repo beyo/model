@@ -10,7 +10,6 @@ describe('Test Type Object', function () {
 
   it('should validate', function () {
     [
-      undefined, null,
       {}, Object.create(null)
     ].forEach(function (value) {
       (value === validator(value)).should.be.true();
@@ -19,6 +18,7 @@ describe('Test Type Object', function () {
 
   it('should throw', function () {
     [
+      undefined, null,
       -1, 0, 1, Infinity, NaN,
       true, false,
       '', 'foo',

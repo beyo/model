@@ -10,7 +10,6 @@ describe('Test Type Boolean', function () {
 
   it('should validate', function () {
     [
-      undefined, null,
       true, false
     ].forEach(function (value) {
       (value === validator(value)).should.be.true();
@@ -48,6 +47,7 @@ describe('Test Type Boolean', function () {
 
   it('should throw', function () {
     [
+      undefined, null,
       '', 'foo',
       function () {}, {}, /./, new Date(),
       [], new Array()

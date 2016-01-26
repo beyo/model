@@ -10,7 +10,6 @@ describe('Test Type Date', function () {
 
   it('should validate', function () {
     [
-      undefined, null,
       new Date(), new Date(Date.now())
     ].forEach(function (value) {
       (value === validator(value)).should.be.true();
@@ -35,6 +34,7 @@ describe('Test Type Date', function () {
 
   it('should throw', function () {
     [
+      undefined, null,
       NaN, Infinity,
       '', 'foo',
       function () {}, {}, /./,

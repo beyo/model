@@ -10,7 +10,6 @@ describe('Test Type Integer', function () {
 
   it('should validate', function () {
     [
-      undefined, null,
       -Infinity, Infinity,
       -1, 0, 1
     ].forEach(function (value) {
@@ -29,6 +28,7 @@ describe('Test Type Integer', function () {
 
   it('should throw', function () {
     [
+      undefined, null,
       -0.0001, 0.0001, 123.456, '123.456', '-123.456',
       NaN,
       '', 'foo',

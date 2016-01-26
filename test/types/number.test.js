@@ -10,7 +10,6 @@ describe('Test Type Number', function () {
 
   it('should validate', function () {
     [
-      undefined, null,
       -Infinity, Infinity,
       -1, 0, 1,
      -0.0001, 0.0001, 123.456, -123.456
@@ -30,6 +29,7 @@ describe('Test Type Number', function () {
 
   it('should throw', function () {
     [
+      undefined, null,
       NaN,
       '', 'foo',
       function () {}, {}, /./,
