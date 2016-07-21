@@ -161,11 +161,11 @@ describe('Test Model', function () {
 
     model = Model.get(typeNameA)();
     model.b.c.foo.should.equal('foo');
-    model.toJson().should.eql({ b: { c: { foo: 'foo' } } });
+    model.toJSON().should.eql({ b: { c: { foo: 'foo' } } });
 
     model = model.fromJson({ b: { c: { foo: 'bar' } } });
     model.b.c.foo.should.equal('bar');
-    model.toJson().should.eql({ b: { c: { foo: 'bar' } } });
+    model.toJSON().should.eql({ b: { c: { foo: 'bar' } } });
 
   });
 
@@ -283,7 +283,7 @@ describe('Test Model', function () {
       });
       var expectedJson = {roles: [ {name:'A', permissions: [ {name:'a'}, {name:'b'} ] }, {name:'B', permissions: [ {name:'c'} ]} ]};
 
-      user.toJson().should.eql(expectedJson);
+      user.toJSON().should.eql(expectedJson);
 
       user.roles = user.roles.slice(0, 1).map(function (role, roleIndex) {
         user.roles[roleIndex].name = user.roles[roleIndex].name + '+';
@@ -295,8 +295,8 @@ describe('Test Model', function () {
 
       //console.log(JSON.stringify(user._previousData, null, 2));
 
-      user.toJson().should.not.eql(expectedJson);
-      user.toJson().should.eql({roles: [ {name:'A+', permissions: [ {name:'x'} ] } ]});
+      user.toJSON().should.not.eql(expectedJson);
+      user.toJSON().should.eql({roles: [ {name:'A+', permissions: [ {name:'x'} ] } ]});
       user._previousData.should.eql(expectedJson);
 
     });
@@ -423,7 +423,7 @@ describe('Test Model', function () {
 
       var model = Type();
 
-      model.toJson().should.eql({ id: '123', firstName: 'John', lastName: 'Smith' });
+      model.toJSON().should.eql({ id: '123', firstName: 'John', lastName: 'Smith' });
     });
 
   });
@@ -455,7 +455,7 @@ describe('Test Model', function () {
       model.inline.should.eql(['a','b','c']);
       model.objectList.should.eql([{},{},{}]);
 
-      model.toJson().should.eql({values:[1, 2, 3], inline:['a','b','c'], objectList:[{},{},{}]});
+      model.toJSON().should.eql({values:[1, 2, 3], inline:['a','b','c'], objectList:[{},{},{}]});
 
       // replacing array...
       model.values = [ 100, 200, 300 ];
@@ -508,7 +508,7 @@ describe('Test Model', function () {
 
       var model = Type();
 
-      model.toJson().should.eql({});
+      model.toJSON().should.eql({});
 
     });
 
@@ -520,9 +520,9 @@ describe('Test Model', function () {
 
       var model = Type(original);
 
-      model.toJson().should.eql(original);
+      model.toJSON().should.eql(original);
 
-      model.fromJson(delta).toJson().should.eql({
+      model.fromJson(delta).toJSON().should.eql({
         a: 'Hello',
         b: { e: 456 },
         d: 'World!'
