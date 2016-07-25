@@ -163,7 +163,7 @@ describe('Test Model', function () {
     model.b.c.foo.should.equal('foo');
     model.toJSON().should.eql({ b: { c: { foo: 'foo' } } });
 
-    model = model.fromJson({ b: { c: { foo: 'bar' } } });
+    model = model.fromJSON({ b: { c: { foo: 'bar' } } });
     model.b.c.foo.should.equal('bar');
     model.toJSON().should.eql({ b: { c: { foo: 'bar' } } });
 
@@ -522,7 +522,7 @@ describe('Test Model', function () {
 
       model.toJSON().should.eql(original);
 
-      model.fromJson(delta).toJSON().should.eql({
+      model.fromJSON(delta).toJSON().should.eql({
         a: 'Hello',
         b: { e: 456 },
         d: 'World!'
